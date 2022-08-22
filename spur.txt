@@ -1,0 +1,5 @@
+LIB:
+1)opencv (PHOTO,VIEDO)
+2)numpy (BIG DATA)
+3)matplotlib (BIG DATA,GRAPHICS)
+4)tensorflow
