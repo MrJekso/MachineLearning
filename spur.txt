@@ -3,3 +3,4 @@ LIB:
 2)numpy (BIG DATA)
 3)matplotlib (BIG DATA,GRAPHICS)
 4)tensorflow
+5)speedtest (speedtest-cli - download pip)
