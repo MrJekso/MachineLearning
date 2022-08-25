@@ -6,6 +6,17 @@ import speedtest
 import socket
 import datetime
 
+class User_account:
+	def __init__(self,firstname, lastname, post, department):
+		self.lastname = lastname
+		self.firstname = name
+		self.post = post
+		self.department = department
+		self.proc_cpu = ""
+		self.proc_memory = ""
+		self.proc_ram = ""
+		slef.proc_net = ""
+
 def scan_ports(min_port,max_port):
 	ports=[]
 	for port in range(min_port, max_port):
@@ -19,7 +30,20 @@ def scan_ports(min_port,max_port):
 			pass
 	return ports
 
-def info_pc(ip_server):
+def info_cpu():	
+	return psutil.cpu_percent(10)
+def info_memory():
+	hdd=psutil.disk_usage('/')
+	return round(hdd.percent)
+def info_ram():
+	return round(psutil.virtual_memory()[2])
+def info_net():
+	servernames = []
+	st = speedtest.Speedtest()
+	st.get_servers(servernames)
+	return round(st.results.ping/2(**20),2)
+
+def config(ip_server):
 	start = datetime.datetime.now()
 
 	st = speedtest.Speedtest()
@@ -63,4 +87,8 @@ def info_pc(ip_server):
 
 	ends = datetime.datetime.now()
 	print(f"[*] TIME: {ends-start}")
-info_pc("work")
+
+def main(start_word):
+	print(start_word):
+
+main("work")
