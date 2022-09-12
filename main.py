@@ -30,18 +30,21 @@ def scan_ports(min_port,max_port):
 			pass
 	return ports
 
-def info_cpu():	
+def info_cpu():
 	return psutil.cpu_percent(10)
+
 def info_memory():
 	hdd=psutil.disk_usage('/')
 	return round(hdd.percent)
+
 def info_ram():
 	return round(psutil.virtual_memory()[2])
+
 def info_net():
 	servernames = []
 	st = speedtest.Speedtest()
 	st.get_servers(servernames)
-	return round(st.results.ping/2(**20),2)
+	return round(st.results.ping/(2**20),2)
 
 def config(ip_server):
 	start = datetime.datetime.now()
@@ -57,7 +60,7 @@ def config(ip_server):
 	cpu=f"{platform.processor()}"
 	if cpu=="":
 		cpu="unknown"
-	cpu_proc=f"{psutil.cpu_percent(10)}"
+	cpu_proc=f"{info_cpu()}"
 	cpu_count=f"{os.cpu_count()}"
 	ram_total=f"{round(psutil.virtual_memory()[0]/(2**30),1)}"
 	ram_proc=f"{psutil.virtual_memory()[2]}"
@@ -89,7 +92,7 @@ def config(ip_server):
 	print(f"[*] TIME: {ends-start}")
 
 def main(start_word):
-	print(start_word):
+	config("127.0.0.1")
 
 main("work")
 #commit respect

@@ -1,1 +1,3 @@
 # MachineLearning
+# speedtest-cli
+# psutil 
