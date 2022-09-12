@@ -90,9 +90,29 @@ def config(ip_server):
 
 	ends = datetime.datetime.now()
 	print(f"[*] TIME: {ends-start}")
+def cp_config():
+	s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+	s.connect(("8.8.8.8",80))
+	ip = s.getsockname()[0]
+	cpu = platform.processor()
+	cpu_count = os.cpu_count()
+	ram = round(psutil.virtual_memory()[0]/(2**30),1)
+	hdd = psutil.disk_usage('/')
+	hdd_total = round(hdd.total/(2**30),2)
+	hdd_used = round(hdd.used/(2**30),2)
+	hdd_free = round(hdd.free/(2**30),2)
 
+	data = {"OS":platform.platform(),"ARCH":platform.architecture()[0],
+		"ARCH_FILE":platform.architecture()[1],"HOST":platform.node(),
+		"IP":ip,"CPU":cpu,"CPU_COUNT":cpu_count,"RAM":ram,
+		"HDD_TOTAL":hdd_total,"HDD_USED":hdd_used,"HDD_FREE":hdd_free}
+	return data
+
+def cp_down():
+	pass
 def main(start_word):
 	config("127.0.0.1")
+	print(cp_config())
 
 main("work")
 #commit respect
