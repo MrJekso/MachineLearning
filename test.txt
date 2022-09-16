@@ -1,0 +1,7 @@
+date:2022-09-16 11:01:36.902447
+cpu:15.6
+ram:71.1
+ports:[3389]
+network:{'net_download': 33.06, 'new_upload': 37.81}
+hdd_free:31.61
+hdd_total:50.0

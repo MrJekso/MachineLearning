@@ -30,23 +30,18 @@ def scan_ports(min_port,max_port):
 			pass
 	return ports
 
-def info_cpu():
-	return psutil.cpu_percent(10)
-
-def info_memory():
-	hdd=psutil.disk_usage('/')
-	return round(hdd.percent)
-
-def info_ram():
-	return round(psutil.virtual_memory()[2])
-
 def info_net():
 	servernames = []
 	st = speedtest.Speedtest()
 	st.get_servers(servernames)
-	return round(st.results.ping/(2**20),2)
+	net_download = round(st.download()/(2**20),2)
+	net_upload = round(st.upload()/(2**20),2)
+	return {
+		"net_download":net_download,
+		"new_upload":net_upload,
+	}
 
-def config(ip_server):
+def config():
 	start = datetime.datetime.now()
 
 	st = speedtest.Speedtest()
@@ -60,7 +55,7 @@ def config(ip_server):
 	cpu=f"{platform.processor()}"
 	if cpu=="":
 		cpu="unknown"
-	cpu_proc=f"{info_cpu()}"
+	cpu_proc=f"{psutil.cpu_percent(10)}"
 	cpu_count=f"{os.cpu_count()}"
 	ram_total=f"{round(psutil.virtual_memory()[0]/(2**30),1)}"
 	ram_proc=f"{psutil.virtual_memory()[2]}"
@@ -90,7 +85,8 @@ def config(ip_server):
 
 	ends = datetime.datetime.now()
 	print(f"[*] TIME: {ends-start}")
-def cp_config():
+def pc_config():
+	date = datetime.datetime.now()
 	s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 	s.connect(("8.8.8.8",80))
 	ip = s.getsockname()[0]
@@ -102,17 +98,44 @@ def cp_config():
 	hdd_used = round(hdd.used/(2**30),2)
 	hdd_free = round(hdd.free/(2**30),2)
 
-	data = {"OS":platform.platform(),"ARCH":platform.architecture()[0],
+	data = {"DATE":date,"OS":platform.platform(),"ARCH":platform.architecture()[0],
 		"ARCH_FILE":platform.architecture()[1],"HOST":platform.node(),
 		"IP":ip,"CPU":cpu,"CPU_COUNT":cpu_count,"RAM":ram,
 		"HDD_TOTAL":hdd_total,"HDD_USED":hdd_used,"HDD_FREE":hdd_free}
 	return data
 
-def cp_down():
-	pass
-def main(start_word):
-	config("127.0.0.1")
-	print(cp_config())
+def pc_test():
+	date = datetime.datetime.now()
+	cpu = psutil.cpu_percent(10)
+	ram = psutil.virtual_memory()[2]
+	hdd = psutil.disk_usage('/')
+	hdd_total = round(hdd.total/(2**30),2)
+	hdd_free = round(hdd.free/(2**30),2)
+	network = info_net()
+	ports = scan_ports(0,10000)
+	return {
+		"date":date,
+		"cpu":cpu,
+		"ram":ram,
+		"ports":ports,
+		"network":network,
+		"hdd_free":hdd_free,
+		"hdd_total":hdd_total,
+	}
 
-main("work")
-#commit respect
+def config_write(data):
+	f = open("config.txt","w")
+	for k in data:
+		f.write(f"{k}:{data.get(k)}\n")
+	f.close()
+def test_write(data):
+	f = open("test.txt","w")
+	for k in data:
+		f.write(f"{k}:{data.get(k)}\n")
+	f.close()
+
+def main():
+	config_write(pc_config())
+	test_write(pc_test())
+
+main()
